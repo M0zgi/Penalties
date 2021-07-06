@@ -79,12 +79,12 @@ void BasePenalty::menu()
 	do
 	{
 		system("cls");
-		cout << "1. Äîáàâèòü ïðîòîêîë" << endl;
-		cout << "2. Ïå÷àòü âñåõ" << endl;
-		cout << "3. Ïîèñê ïî íîìåðó ÒÑ" << endl;
-		cout << "4. Óñòàíîâèòü îïëàòó" << endl;
-		cout << "5. Ïå÷àòü ïî íîìåðó" << endl;
-		cout << "0. Âûõîä" << endl;
+		cout << "1. Добавить протокол" << endl;
+		cout << "2. Печать всех" << endl;
+		cout << "3. Поиск по номеру ТС" << endl;
+		cout << "4. Установть оплату" << endl;
+		cout << "5. Печать по номеру" << endl;
+		cout << "0. Выход" << endl;
 		int n;
 		cin >> n;
 		cin.ignore();
@@ -108,14 +108,14 @@ void BasePenalty::menu()
 
 inline void BasePenalty::addProtokol()
 {
-	cout << " Äîáàâèòü ïðîòîêîë:" << endl;
+	cout << " Добавить протокол:" << endl;
 	cout << "------------------------" << endl;
 	Protokol* prot = new Protokol;
 	cin >> prot;
 	List<Protokol*>* list = base.get(prot->getNumTS());
 	if (!list)
 	{
-		cout << "Äàííûé íîìåð ÒÑ îòñóòñòâóåò â áàçå è áóäåò äîáàâëåí" << endl;
+		cout << "Данный номер ТС отсутсвует в базе и будет добавлен" << endl;
 		List<Protokol*> newList;
 		newList.push_front(prot);
 		base.push_r(prot->getNumTS(), newList);
@@ -124,7 +124,7 @@ inline void BasePenalty::addProtokol()
 	{
 		list->push_front(prot);
 	}
-	cout << "Íîâûé ïðîòîêë äîáàâëåí" << endl;
+	cout << "Новый протокол добавлен" << endl;
 }
 
 inline void BasePenalty::print()

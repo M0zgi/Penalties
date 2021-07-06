@@ -83,6 +83,8 @@ public:
 
 	bool push(TKey key, TVal val)
 	{
+		//итерация
+		
 		if (!root)
 		{
 			root = new BTreeNode<TKey, TVal>(key, val);
@@ -126,6 +128,8 @@ public:
 		return true;
 	}
 
+	
+	//Добавление рекурсия
 	BTreeNode<TKey, TVal>* push_r(TKey key, TVal val, BTreeNode<TKey, TVal>*& node = root)
 	{
 		if (!node)
