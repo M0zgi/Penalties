@@ -291,7 +291,7 @@ inline void BasePenalty::printNum()
 	}
 
 	else
-		cout << "Протокол по номер ТС " << num << " не найдено" << endl;
+		cout << "Протокол по номеру ТС " << num << " не найдено" << endl;
 
 	system("pause");
 }
@@ -356,7 +356,7 @@ inline void BasePenalty::setPay()
 		cout << "Введите порядковый номер протокола для внесения оплаты: ";
 		cin >> pay;
 		prot = list->operator[](pay - 1);
-		cout << "Протокол оплаче? Да(1)/Нет(0): ";
+		cout << "Протокол оплачен? Да(1)/Нет(0): ";
 		cin >> pay;
 		prot->setpay(pay);
 		cout << "Изменения внесены...\n";
