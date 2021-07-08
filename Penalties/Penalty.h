@@ -35,6 +35,7 @@ public:
 
 	friend ostream& operator << (ostream& out, const Protokol& p);
 	friend ostream& operator << (ostream& out, const Protokol* p);
+	friend ofstream& operator << (ofstream& out, const Protokol* p);
 	friend istream& operator >> (istream& in, Protokol& p);
 	friend istream& operator >> (istream& in, Protokol* p);
 
@@ -43,36 +44,57 @@ public:
 
 ostream& operator<<(ostream& out, const Protokol& p)
 {
-	out << p.numTS << "  " << p.date << "  " << setw(6) << left << p.numPPN << setw(20) << p.tag << setw(6) << p.sum
+	out << p.numTS << "  " << p.date << "    " << setw(13) << left << p.numPPN << setw(58) << p.tag << setw(12) << p.sum
 		<< ((p.pay) ? "Оплачено" : "Не оплачено") << endl;
 	return out;
 }
 
 ostream& operator<<(ostream& out, const Protokol* p)
 {
-	out << p->numTS << "  " << p->date << "  " << setw(6) << left << p->numPPN << setw(20) << p->tag << setw(6) << p->sum
-		<< ((p->pay) ? "Оплачено" : "Не оплачено") << endl;
+
+	out  << left << " | " << setw(11) << p->numTS << "|"<< setw(12) << p->date << "| " << setw(15) << p->numPPN << "| "<< setw(56) << p->tag << "| " << setw(11) << p->sum
+		<< "| "<< setw(16) << ((p->pay) ? "Оплачено" : "Не оплачено") << "|"<< endl;
+	out << " +------------+------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
 	return out;
 }
 
+inline ofstream& operator<<(ofstream& out, const Protokol* p)
+{
+	static bool t = false;
+
+	if (!t)
+	{
+		out << p->numTS << endl << p->date << endl << p->numPPN << endl << p->tag << endl << p->sum
+			<< endl << ((p->pay) ? "1" : "0");
+		t = true;
+	}
+	
+	else
+		out << endl << p->numTS << endl << p->date << endl << p->numPPN << endl << p->tag << endl << p->sum
+		<< endl << ((p->pay) ? "1" : "0");
+
+	return out;
+}
+
+
 inline istream& operator>>(istream& in, Protokol& p)
 {
-	cout << "Номер ТС: "; getline(in, p.numTS);
-	cout << "Дата    : "; getline(in, p.date);
-	cout << "Номер ПП: "; getline(in, p.numPPN);
-	cout << "Описание: "; getline(in, p.tag);
-	cout << "Сумма   : "; in >> p.sum;
+	cout << "Номер ТС   : "; getline(in, p.numTS);
+	cout << "Дата       : "; getline(in, p.date);
+	cout << "Номер КУоАП: "; getline(in, p.numPPN);
+	cout << "Описание   : "; getline(in, p.tag);
+	cout << "Сумма      : "; in >> p.sum;
 	in.ignore();
 	return in;
 }
 
 inline istream& operator>>(istream& in, Protokol* p)
 {
-	cout << "Номер ТС: "; getline(in, p->numTS);
-	cout << "Дата    : "; getline(in, p->date);
-	cout << "Номер ПП: "; getline(in, p->numPPN);
-	cout << "Описание: "; getline(in, p->tag);
-	cout << "Сумма   : "; in >> p->sum;
+	cout << "Номер ТС   : "; getline(in, p->numTS);
+	cout << "Дата       : "; getline(in, p->date);
+	cout << "Номер КУоАП: "; getline(in, p->numPPN);
+	cout << "Описание   : "; getline(in, p->tag);
+	cout << "Сумма      : "; in >> p->sum;
 	in.ignore();
 	return in;
 }
@@ -86,6 +108,7 @@ public:
 	void addProtokol();
 	void addProtokolFile();
 	void print();
+	void saveToFile();
 	void printNum();
 	void printRange();
 	void find();
@@ -144,7 +167,7 @@ void BasePenalty::menu()
 		cout << "2. Печать всех" << endl;
 		cout << "3. Поиск по номеру ТС" << endl;
 		cout << "4. Установть оплату" << endl;
-		cout << "5. Печать по номеру" << endl;
+		cout << "5. Печать по диапазону номеров" << endl;
 		cout << "0. Выход" << endl;
 		int n;
 		cin >> n;
@@ -155,9 +178,18 @@ void BasePenalty::menu()
 			addProtokol();
 			break;
 		case 2:
+	
+			system("cls");
+			gotoxy(1, 0);
+			cout << "+------------+------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+			gotoxy(1, 1);
+			cout << "|  Номер ТС  |    Дата    |   Номер КУоАП  |                      Описание                           |    Сумма   |  Статус оплаты  |\n";
+			gotoxy(1, 2);
+			cout << "+------------+------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
 			print();
 			break;
 		case 3:
+			system("cls");
 			printNum();
 			break;
 		case 5:
@@ -165,7 +197,8 @@ void BasePenalty::menu()
 			break;
 		case 0:
 		{
-
+			//addProtokolFile();
+			base.printF();
 			exit(0);
 		}
 			
@@ -231,6 +264,37 @@ inline void BasePenalty::addProtokol()
 
 inline void BasePenalty::addProtokolFile()
 {
+	
+	//Protokol* prot = nullptr;
+
+	//List<Protokol*> newList;
+	
+	//base.first(newList);
+
+	List<Protokol*> *newList = base.first();
+
+	cout << (*newList).getLength();
+
+	/*for (size_t i = 0; i < newList.getLength(); i++)
+	{
+		prot = newList.operator[](i);
+
+		ofstream fout;
+		fout.open("penalty.txt");
+
+		if (fout.is_open())
+		{
+			fout << endl;
+			fout << prot->getNumTS() << "\n";
+			fout << prot->getdate() << "\n";
+			fout << prot->getnumPPN() << "\n";
+			fout << prot->gettag() << "\n";
+			fout << prot->getsum() << "\n";
+			fout << prot->getpay();
+		}
+
+		fout.close();
+	}*/
 }
 
 inline void BasePenalty::print()
@@ -238,6 +302,11 @@ inline void BasePenalty::print()
 	base.print();
 	cout << endl;
 	system("pause");
+}
+
+inline void BasePenalty::saveToFile()
+{
+
 }
 
 inline void BasePenalty::printNum()
@@ -250,6 +319,12 @@ inline void BasePenalty::printNum()
 
 	if (list)
 	{
+		gotoxy(1, 6);
+		cout << "+------------+------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+		gotoxy(1, 7);
+		cout << "|  Номер ТС  |    Дата    |   Номер КУоАП  |                      Описание                           |    Сумма   |  Статус оплаты  |\n";
+		gotoxy(1, 8);
+		cout << "+------------+------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
 		list->print();
 	}
 

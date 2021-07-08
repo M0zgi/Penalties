@@ -2,7 +2,7 @@
 #include<iostream>
 #include"MyData.h"
 #include<Windows.h>
-
+#include<fstream>
 using namespace std;
 
 void gotoxy(int x, int y)
@@ -50,7 +50,8 @@ public:
 
 	template<class T>
 	friend ostream& operator <<(ostream& out, const List<T>& obj);
-
+	template<class T>
+	friend ofstream& operator <<(ofstream& out, const List<T>& obj);
 };
 
 template<class T>
@@ -222,6 +223,40 @@ ostream& operator<<(ostream& out, const List<T>& obj)
 	}
 	return out;
 }
+
+template<class T>
+inline ofstream& operator<<(ofstream& out, const List<T>& obj)
+{
+	if (obj.length == 0)
+	{
+		out << "List empty";
+		return out;
+	}
+	MyData<T>* temp = obj.first;
+	while (temp)
+	{
+		out << temp->value;
+		temp = temp->next;
+	}
+	return out;
+}
+
+//template<class T>
+//ofstream& operator<<(ofstream& out, const List<T>& obj)
+//{
+//	if (obj.length == 0)
+//	{
+//		out << "List empty";
+//		return out;
+//	}
+//	MyData<T>* temp = obj.first;
+//	while (temp)
+//	{
+//		out << temp->value;
+//		temp = temp->next;
+//	}
+//	return out;
+//}
 
 template<class T>
 inline T List<T>::operator[](int ind) const

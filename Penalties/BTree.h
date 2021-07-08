@@ -24,6 +24,39 @@ public:
 
 	}
 
+	void printF() //симетричный
+	{
+		ofstream fout;
+		static bool t = false;
+
+		if (left != nullptr) left->printF();				
+
+		if (!t)
+		{
+			fout.open("penalty.txt");
+			if (fout.is_open())
+			{
+				fout << value;
+				t = true;
+			}
+		}
+
+		if (t)
+		{
+			fout.open("penalty.txt", ios::app);
+			if (fout.is_open())
+			{
+				fout << value;
+				
+			}
+		}		
+
+		fout.close();
+
+		if (right != nullptr) right->printF();
+
+	}
+
 	void del()
 	{
 		if (left != nullptr) left->del();
@@ -68,6 +101,43 @@ public:
 	{
 		if (root)
 			root->print();
+		else
+			cout << "Tree empty";
+		cout << endl;
+	}
+
+	void printF()
+	{
+		if (root)
+			root->printF();
+		else
+			cout << "Tree empty";
+		cout << endl;
+	}
+
+	TVal *first()
+	{
+		if (root)
+		{
+
+			BTreeNode<TKey, TVal>* next = root;
+
+			bool working = true;
+
+			do
+			{
+				if (next->left != nullptr)
+					next = next->left;
+
+				else
+				{
+					working = false;
+					return & next->value;
+				}
+
+			} while (working);
+		} 
+
 		else
 			cout << "Tree empty";
 		cout << endl;
