@@ -113,35 +113,7 @@ public:
 		else
 			cout << "Tree empty";
 		cout << endl;
-	}
-
-	TVal *first()
-	{
-		if (root)
-		{
-
-			BTreeNode<TKey, TVal>* next = root;
-
-			bool working = true;
-
-			do
-			{
-				if (next->left != nullptr)
-					next = next->left;
-
-				else
-				{
-					working = false;
-					return & next->value;
-				}
-
-			} while (working);
-		} 
-
-		else
-			cout << "Tree empty";
-		cout << endl;
-	}
+	}	
 
 	TVal* get(const TKey& key)
 	{

@@ -41,7 +41,6 @@ public:
 
 };
 
-
 ostream& operator<<(ostream& out, const Protokol& p)
 {
 	out << p.numTS << "  " << p.date << "    " << setw(13) << left << p.numPPN << setw(58) << p.tag << setw(12) << p.sum
@@ -51,10 +50,12 @@ ostream& operator<<(ostream& out, const Protokol& p)
 
 ostream& operator<<(ostream& out, const Protokol* p)
 {
-
-	out  << left << " | " << setw(11) << p->numTS << "|"<< setw(12) << p->date << "| " << setw(15) << p->numPPN << "| "<< setw(56) << p->tag << "| " << setw(11) << p->sum
+	
+	
+	out  << left << " | " << setw(11) << p->numTS << "|"<< setw(13) << p->date << "| " << setw(15) << p->numPPN << "| "<< setw(56) << p->tag << "| " << setw(11) << p->sum
 		<< "| "<< setw(16) << ((p->pay) ? "Оплачено" : "Не оплачено") << "|"<< endl;
-	out << " +------------+------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+	out << " +------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+
 	return out;
 }
 
@@ -106,9 +107,7 @@ class BasePenalty
 public:
 	void menu();
 	void addProtokol();
-	void addProtokolFile();
 	void print();
-	void saveToFile();
 	void printNum();
 	void printRange();
 	void find();
@@ -152,8 +151,7 @@ void BasePenalty::menu()
 			else
 			{
 				list->push_front(prot);			
-			}
-			
+			}			
 		}
 
 		cout << "Протоколы загржены из файла" << endl;
@@ -181,16 +179,20 @@ void BasePenalty::menu()
 	
 			system("cls");
 			gotoxy(1, 0);
-			cout << "+------------+------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+			cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
 			gotoxy(1, 1);
-			cout << "|  Номер ТС  |    Дата    |   Номер КУоАП  |                      Описание                           |    Сумма   |  Статус оплаты  |\n";
+			cout << "|  Номер ТС  |    Дата     |   Номер КУоАП  |                      Описание                           |    Сумма   |  Статус оплаты  |\n";
 			gotoxy(1, 2);
-			cout << "+------------+------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+			cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
 			print();
 			break;
 		case 3:
 			system("cls");
 			printNum();
+			break;
+		case 4:
+			system("cls");
+			setPay();
 			break;
 		case 5:
 			printRange();
@@ -262,41 +264,6 @@ inline void BasePenalty::addProtokol()
 	cout << "Новый протокол добавлен" << endl;
 }
 
-inline void BasePenalty::addProtokolFile()
-{
-	
-	//Protokol* prot = nullptr;
-
-	//List<Protokol*> newList;
-	
-	//base.first(newList);
-
-	List<Protokol*> *newList = base.first();
-
-	cout << (*newList).getLength();
-
-	/*for (size_t i = 0; i < newList.getLength(); i++)
-	{
-		prot = newList.operator[](i);
-
-		ofstream fout;
-		fout.open("penalty.txt");
-
-		if (fout.is_open())
-		{
-			fout << endl;
-			fout << prot->getNumTS() << "\n";
-			fout << prot->getdate() << "\n";
-			fout << prot->getnumPPN() << "\n";
-			fout << prot->gettag() << "\n";
-			fout << prot->getsum() << "\n";
-			fout << prot->getpay();
-		}
-
-		fout.close();
-	}*/
-}
-
 inline void BasePenalty::print()
 {
 	base.print();
@@ -304,27 +271,22 @@ inline void BasePenalty::print()
 	system("pause");
 }
 
-inline void BasePenalty::saveToFile()
-{
-
-}
-
 inline void BasePenalty::printNum()
 {
-	cout << " Поиск протокола по номеру ТС:" << endl;
-	cout << "------------------------" << endl;
+	cout << "Поиск протокола по номеру ТС:" << endl;
+	cout << "-----------------------------" << endl;
 	string num;
 	cout << "Номер ТС: "; getline(cin, num);	
 	List<Protokol*>* list = base.get(num);
 
 	if (list)
 	{
+		gotoxy(1, 5);
+		cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
 		gotoxy(1, 6);
-		cout << "+------------+------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+		cout << "|  Номер ТС  |    Дата     |   Номер КУоАП  |                      Описание                           |    Сумма   |  Статус оплаты  |\n";
 		gotoxy(1, 7);
-		cout << "|  Номер ТС  |    Дата    |   Номер КУоАП  |                      Описание                           |    Сумма   |  Статус оплаты  |\n";
-		gotoxy(1, 8);
-		cout << "+------------+------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+		cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
 		list->print();
 	}
 
@@ -365,6 +327,51 @@ inline void BasePenalty::printRange()
 	//}
 
 	
+
+	system("pause");
+}
+
+inline void BasePenalty::setPay()
+{
+	cout << "Установть оплату. Введите номер ТС:" << endl;
+	cout << "------------------------" << endl;
+	string num;
+	cout << "Номер ТС: "; getline(cin, num);
+	List<Protokol*>* list = base.get(num);
+
+	if (list)
+	{
+		gotoxy(1, 6);
+		cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+		gotoxy(1, 7);
+		cout << "|  Номер ТС  |    Дата     |   Номер КУоАП  |                      Описание                           |    Сумма   |  Статус оплаты  |\n";
+		gotoxy(1, 8);
+		cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+		list->print();
+
+		Protokol* prot = list->peek_front();
+
+		int pay;
+
+		cout << "Введите порядковый номер протокола для внесения оплаты: ";
+		cin >> pay;
+		prot = list->operator[](pay - 1);
+		cout << "Протокол оплаче? Да(1)/Нет(0): ";
+		cin >> pay;
+		prot->setpay(pay);
+		system("cls");
+		gotoxy(1, 6);
+		cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+		gotoxy(1, 7);
+		cout << "|  Номер ТС  |    Дата     |   Номер КУоАП  |                      Описание                           |    Сумма   |  Статус оплаты  |\n";
+		gotoxy(1, 8);
+		cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+		cout << "Изменения внесены...\n";
+		list->print();
+	}
+
+	else
+		cout << "Протокол по номер ТС " << num << " не найдено" << endl;
 
 	system("pause");
 }
