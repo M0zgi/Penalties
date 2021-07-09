@@ -178,12 +178,7 @@ void BasePenalty::menu()
 		case 2:
 	
 			system("cls");
-			gotoxy(1, 0);
-			cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
-			gotoxy(1, 1);
-			cout << "|  Номер ТС  |    Дата     |   Номер КУоАП  |                      Описание                           |    Сумма   |  Статус оплаты  |\n";
-			gotoxy(1, 2);
-			cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+			
 			print();
 			break;
 		case 3:
@@ -195,6 +190,7 @@ void BasePenalty::menu()
 			setPay();
 			break;
 		case 5:
+			system("cls");
 			printRange();
 			break;
 		case 0:
@@ -215,7 +211,7 @@ void BasePenalty::menu()
 inline void BasePenalty::addProtokol()
 {
 	cout << " Добавить протокол:" << endl;
-	cout << "------------------------" << endl;
+	cout << "-------------------" << endl;
 	Protokol* prot = new Protokol;
 	cin >> prot;
 	List<Protokol*>* list = base.get(prot->getNumTS());
@@ -266,6 +262,12 @@ inline void BasePenalty::addProtokol()
 
 inline void BasePenalty::print()
 {
+	gotoxy(1, 0);
+	cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+	gotoxy(1, 1);
+	cout << "|  Номер ТС  |    Дата     |   Номер КУоАП  |                      Описание                           |    Сумма   |  Статус оплаты  |\n";
+	gotoxy(1, 2);
+	cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
 	base.print();
 	cout << endl;
 	system("pause");
@@ -298,35 +300,47 @@ inline void BasePenalty::printNum()
 
 inline void BasePenalty::printRange()
 {
-	cout << " Поиск протокола по диапазону номеров ТС:" << endl;
-	cout << "------------------------" << endl;
+	cout << " Поиск протоколов по диапазону номеров ТС:" << endl;
+	cout << "-----------------------------------------" << endl;
 	string num, num2;
 	cout << "Начальный номер ТС: "; getline(cin, num);
 	cout << "Конечный номер ТС: "; getline(cin, num2);
-
-	//const unsigned SHIFT_ON_NUMBER = 2;
-	//int size = num.length();
-	//char *buffCh = new char[size];
-
-	//for (size_t i = 0; i < size; i++)
-	//{
-	//	buffCh[i] = num[i];
-
-	//	cout << buffCh[i];
-	//}
-
-	//buffCh[size] = '\0';
-
-	//cout << endl;
-	//while (buffCh)
-	//{
-	//	//num.erase(prev(num.end()));
-	//	cout << buffCh << endl;
-
-	//	buffCh -= 1;
-	//}
-
 	
+
+	List<Protokol*>* list = base.get(num);
+	List<Protokol*>* list2 = base.get(num2);
+
+	if (list)
+	cout << "Номер " << num << " найден в базе" << endl;
+	
+	else
+		cout << "Номер " << num << " не найден в базе" << endl;
+	
+	if (list2)
+		cout << "Номер " << num2 << " найден в базе" << endl;
+	else
+		cout << "Номер " << num2 << " не найден в базе" << endl;
+
+	if (num < num2)
+		swap(num, num2);	
+
+	if (list && list2)
+	{
+		cout << " Поиск протоколов по диапазону номеров ТС:" << endl;
+
+		gotoxy(1, 8);
+		cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+		gotoxy(1, 9);
+		cout << "|  Номер ТС  |    Дата     |   Номер КУоАП  |                      Описание                           |    Сумма   |  Статус оплаты  |\n";
+		gotoxy(1, 10);
+		cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";
+
+		base.printD(num, num2);
+	}
+	
+
+	else
+		cout << "Введите корректно диапазон номеров для поиска!" << endl;
 
 	system("pause");
 }
@@ -334,7 +348,7 @@ inline void BasePenalty::printRange()
 inline void BasePenalty::setPay()
 {
 	cout << "Установть оплату. Введите номер ТС:" << endl;
-	cout << "------------------------" << endl;
+	cout << "-----------------------------------" << endl;
 	string num;
 	cout << "Номер ТС: "; getline(cin, num);
 	List<Protokol*>* list = base.get(num);
@@ -364,7 +378,7 @@ inline void BasePenalty::setPay()
 		system("cls");
 
 		cout << "Список изменений у ТС: " << num << endl;
-		cout << "------------------------" << endl;
+		cout << "----------------------" << endl;
 
 		gotoxy(1, 6);
 		cout << "+------------+-------------+----------------+---------------------------------------------------------+------------+-----------------+\n";

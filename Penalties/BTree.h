@@ -21,6 +21,17 @@ public:
 		cout << value;
 		//value.print();
 		if (right != nullptr) right->print();
+	}
+
+	void printD(const TKey& key, const TKey& key1) //симетричный
+	{			
+
+		if (left != nullptr) left->printD(key, key1);
+		
+		if (this->key >= key1 && this->key <= key)
+			cout << value;
+		
+		if (right != nullptr) right->printD(key, key1);			
 
 	}
 
@@ -91,6 +102,7 @@ public:
 
 	void clear()
 	{
+		
 		if (root)
 			root->del();
 		root = nullptr;
@@ -114,6 +126,15 @@ public:
 			cout << "Tree empty";
 		cout << endl;
 	}	
+
+	void printD(TKey key, TKey key2)
+	{
+		if (root)
+			root->printD(key, key2);
+		else
+			cout << "Tree empty";
+		cout << endl;
+	}
 
 	TVal* get(const TKey& key)
 	{
